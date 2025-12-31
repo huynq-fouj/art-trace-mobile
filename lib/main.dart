@@ -12,12 +12,21 @@ void main() async {
 }
 
 Future<void> _requestPermissions() async {
-  await [
-    Permission.camera,
-    Permission.microphone,
-    Permission.storage,
-    Permission.photos,
-  ].request();
+  var cameraStatus = await Permission.camera.status;
+  var microphoneStatus = await Permission.microphone.status;
+
+  if (!cameraStatus.isGranted || !microphoneStatus.isGranted) {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+      Permission.storage,
+      Permission.photos,
+    ].request();
+
+    if (statuses[Permission.camera] == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
